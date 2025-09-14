@@ -87,13 +87,13 @@ export default function Top10Row({ title, items }: Top10RowProps) {
             >
               {/* Rank number behind the image */}
               <div
-                className="absolute bottom-0 left-[-140px] z-0 flex items-end p-4"
+                className="absolute bottom-[-25px] left-[-140px] z-0 flex items-end p-4"
                 style={{ width: '300px', height: '300px' }}
               >
                 <div
                   className="font-black leading-none"
                   style={{
-                    fontSize: '16rem',
+                    fontSize: '15rem',
                     WebkitTextStroke: '3px rgba(255, 255, 255, 0.25)',
                     WebkitTextFillColor: 'transparent',
                     textShadow: '3px 3px 6px rgba(0,0,0,0.8)',

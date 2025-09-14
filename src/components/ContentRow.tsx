@@ -16,7 +16,6 @@ export default function ContentRow({ title, items }: ContentRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -45,25 +44,7 @@ export default function ContentRow({ title, items }: ContentRowProps) {
       x: tileRect.left + tileRect.width / 2,
       y: tileRect.top + tileRect.height / 2,
     });
-
-    // Clear any existing timeout
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
-
-    // Set delayed hover effect
-    hoverTimeoutRef.current = setTimeout(() => {
-      setHoveredItem(itemId);
-    }, 1000);
-  };
-
-  const handleMouseLeave = () => {
-    // Clear timeout and hide hover box
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-      hoverTimeoutRef.current = null;
-    }
-    setHoveredItem(null);
+    setHoveredItem(itemId);
   };
 
   return (
@@ -79,7 +60,7 @@ export default function ContentRow({ title, items }: ContentRowProps) {
               key={item.id}
               className="flex-shrink-0 w-[144px] h-[216px] bg-gray-800 rounded-md cursor-pointer transition-all duration-300 relative"
               onMouseEnter={(e) => handleMouseEnter(item.id, e)}
-              onMouseLeave={handleMouseLeave}
+              onMouseLeave={() => setHoveredItem(null)}
             >
               <img
                 src={item.image}
