@@ -1,22 +1,56 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { app } from '../lib/firebase';
+
+interface Movie {
+  id: string;
+  title: string;
+  image?: string;
+  genre?: string;
+  year?: number;
+  duration?: string;
+  rating?: string;
+}
 
 interface ContentRowProps {
   title: string;
-  items: Array<{
-    id: string;
-    title: string;
-    image: string;
-  }>;
 }
 
-export default function ContentRow({ title, items }: ContentRowProps) {
+export default function ContentRow({ title }: ContentRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const db = getFirestore(app);
+        const moviesCollection = collection(db, 'movies');
+        const moviesSnapshot = await getDocs(moviesCollection);
+        
+        const moviesData = moviesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Movie[];
+        
+        setMovies(moviesData);
+      } catch (err) {
+        console.error('Error fetching movies:', err);
+        setError('Failed to fetch movies');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -65,6 +99,9 @@ export default function ContentRow({ title, items }: ContentRowProps) {
     setHoveredItem(null);
   };
 
+  if (loading) return <div className="px-4 md:px-8 py-8"><div className="text-white">Loading {title}...</div></div>;
+  if (error) return <div className="px-4 md:px-8 py-8"><div className="text-red-500">Error: {error}</div></div>;
+
   return (
     <div className="px-4 md:px-8 py-8">
       <h2 className="text-xl md:text-2xl font-semibold text-white mb-4">{title}</h2>
@@ -73,21 +110,21 @@ export default function ContentRow({ title, items }: ContentRowProps) {
           ref={scrollRef}
           className="flex space-x-4 overflow-x-scroll scrollbar-hide pb-4"
         >
-          {items.map((item) => (
+          {movies.map((movie) => (
             <div
-              key={item.id}
+              key={movie.id}
               className="flex-shrink-0 w-[144px] h-[216px] bg-gray-800 rounded-md cursor-pointer transition-all duration-300 relative"
-              onMouseEnter={(e) => handleMouseEnter(item.id, e)}
+              onMouseEnter={(e) => handleMouseEnter(movie.id, e)}
               onMouseLeave={handleMouseLeave}
             >
               <img
-                src={item.image}
-                alt={item.title}
+                src={movie.image || '/placeholder.jpg'}
+                alt={movie.title}
                 className="w-full h-full object-cover rounded-md"
               />
 
               {/* Hover expansion box */}
-              {hoveredItem === item.id && (
+              {hoveredItem === movie.id && (
                 <div
                   className="fixed z-50 bg-gray-800 rounded-md shadow-2xl transition-all duration-300"
                   style={{
@@ -100,19 +137,19 @@ export default function ContentRow({ title, items }: ContentRowProps) {
                 >
                   <div className="p-6 h-full flex flex-col">
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+                      <h3 className="text-xl font-bold text-white mb-3">{movie.title}</h3>
                       <div className="space-y-2 text-gray-300">
                         <p className="text-sm">
-                          <span className="font-semibold">Genre:</span> {['Action', 'Drama', 'Comedy', 'Thriller', 'Romance'][Math.floor(Math.random() * 5)]}
+                          <span className="font-semibold">Genre:</span> {movie.genre || ['Action', 'Drama', 'Comedy', 'Thriller', 'Romance'][Math.floor(Math.random() * 5)]}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Rating:</span> {Math.floor(Math.random() * 2) + 7}.{Math.floor(Math.random() * 9) + 1}/10
+                          <span className="font-semibold">Rating:</span> {movie.rating || `${Math.floor(Math.random() * 2) + 7}.${Math.floor(Math.random() * 9) + 1}/10`}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Duration:</span> {Math.floor(Math.random() * 60) + 90} min
+                          <span className="font-semibold">Duration:</span> {movie.duration || `${Math.floor(Math.random() * 60) + 90} min`}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Year:</span> {2020 + Math.floor(Math.random() * 5)}
+                          <span className="font-semibold">Year:</span> {movie.year || 2024}
                         </p>
                       </div>
                     </div>
