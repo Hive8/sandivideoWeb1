@@ -3,16 +3,19 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState } from 'react';
 
-interface ContentRowProps {
+interface Top10Item {
+  id: string;
   title: string;
-  items: Array<{
-    id: string;
-    title: string;
-    image: string;
-  }>;
+  image: string;
+  rank: number;
 }
 
-export default function ContentRow({ title, items }: ContentRowProps) {
+interface Top10RowProps {
+  title: string;
+  items: Top10Item[];
+}
+
+export default function Top10Row({ title, items }: Top10RowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
@@ -40,25 +43,24 @@ export default function ContentRow({ title, items }: ContentRowProps) {
     const tileElement = event.currentTarget as HTMLElement;
     const tileRect = tileElement.getBoundingClientRect();
     
-    // Position relative to viewport (fixed positioning)
-    setHoverPosition({
-      x: tileRect.left + tileRect.width / 2,
-      y: tileRect.top + tileRect.height / 2,
-    });
-
     // Clear any existing timeout
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
     }
-
-    // Set delayed hover effect
+    
+    // Set timeout for delayed hover effect
     hoverTimeoutRef.current = setTimeout(() => {
+      // Position relative to viewport (fixed positioning)
+      setHoverPosition({
+        x: tileRect.left + tileRect.width / 2,
+        y: tileRect.top + tileRect.height / 2,
+      });
       setHoveredItem(itemId);
     }, 1000);
   };
 
   const handleMouseLeave = () => {
-    // Clear timeout and hide hover box
+    // Clear the timeout to prevent delayed hover
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
@@ -72,19 +74,40 @@ export default function ContentRow({ title, items }: ContentRowProps) {
       <div className="relative group">
         <div
           ref={scrollRef}
-          className="flex space-x-4 overflow-x-scroll scrollbar-hide pb-4"
+          className="flex overflow-x-scroll scrollbar-hide pb-4"
+          style={{ paddingLeft: '120px' }}
         >
           {items.map((item) => (
             <div
               key={item.id}
               className="flex-shrink-0 w-[144px] h-[216px] bg-gray-800 rounded-md cursor-pointer transition-all duration-300 relative"
+              style={{ marginRight: '120px' }}
               onMouseEnter={(e) => handleMouseEnter(item.id, e)}
               onMouseLeave={handleMouseLeave}
             >
+              {/* Rank number behind the image */}
+              <div
+                className="absolute bottom-0 left-[-140px] z-0 flex items-end p-4"
+                style={{ width: '300px', height: '300px' }}
+              >
+                <div
+                  className="font-black leading-none"
+                  style={{
+                    fontSize: '16rem',
+                    WebkitTextStroke: '3px rgba(255, 255, 255, 0.25)',
+                    WebkitTextFillColor: 'transparent',
+                    textShadow: '3px 3px 6px rgba(0,0,0,0.8)',
+                    letterSpacing: '-0.15em',
+                  }}
+                >
+                  {item.rank}
+                </div>
+              </div>
+
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-full h-full object-cover rounded-md"
+                className="w-full h-full object-cover relative z-10 rounded-md"
               />
 
               {/* Hover expansion box */}
@@ -101,19 +124,20 @@ export default function ContentRow({ title, items }: ContentRowProps) {
                 >
                   <div className="p-6 h-full flex flex-col">
                     <div className="flex-1">
+                      <div className="text-4xl font-black text-white mb-2">{item.rank}</div>
                       <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                       <div className="space-y-2 text-gray-300">
                         <p className="text-sm">
-                          <span className="font-semibold">Genre:</span> {['Action', 'Drama', 'Comedy', 'Thriller', 'Romance'][Math.floor(Math.random() * 5)]}
+                          <span className="font-semibold">Genre:</span> {item.rank % 2 === 0 ? 'Action/Adventure' : 'Drama/Thriller'}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Rating:</span> {Math.floor(Math.random() * 2) + 7}.{Math.floor(Math.random() * 9) + 1}/10
+                          <span className="font-semibold">Rating:</span> {Math.floor(Math.random() * 2) + 8}.{Math.floor(Math.random() * 9) + 1}/10
                         </p>
                         <p className="text-sm">
                           <span className="font-semibold">Duration:</span> {Math.floor(Math.random() * 60) + 90} min
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Year:</span> {2020 + Math.floor(Math.random() * 5)}
+                          <span className="font-semibold">Year:</span> 2024
                         </p>
                       </div>
                     </div>

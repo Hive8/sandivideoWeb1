@@ -91,6 +91,69 @@ export const sampleMovies = [
   },
 ];
 
+export const top10Movies = [
+  {
+    id: 'top1',
+    title: 'Blockbuster Hit',
+    image: 'https://images.unsplash.com/photo-1489599735734-79b4ba6c9c0b?w=400&h=600&fit=crop',
+    rank: 1,
+  },
+  {
+    id: 'top2',
+    title: 'Summer Blockbuster',
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    rank: 2,
+  },
+  {
+    id: 'top3',
+    title: 'Action Thriller',
+    image: 'https://images.unsplash.com/photo-1489599735734-79b4ba6c9c0b?w=400&h=600&fit=crop',
+    rank: 3,
+  },
+  {
+    id: 'top4',
+    title: 'Drama Masterpiece',
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    rank: 4,
+  },
+  {
+    id: 'top5',
+    title: 'Comedy Sensation',
+    image: 'https://images.unsplash.com/photo-1489599735734-79b4ba6c9c0b?w=400&h=600&fit=crop',
+    rank: 5,
+  },
+  {
+    id: 'top6',
+    title: 'Sci-Fi Adventure',
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    rank: 6,
+  },
+  {
+    id: 'top7',
+    title: 'Romance Story',
+    image: 'https://images.unsplash.com/photo-1489599735734-79b4ba6c9c0b?w=400&h=600&fit=crop',
+    rank: 7,
+  },
+  {
+    id: 'top8',
+    title: 'Horror Film',
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    rank: 8,
+  },
+  {
+    id: 'top9',
+    title: 'Animated Feature',
+    image: 'https://images.unsplash.com/photo-1489599735734-79b4ba6c9c0b?w=400&h=600&fit=crop',
+    rank: 9,
+  },
+  {
+    id: 'top10',
+    title: 'Documentary Winner',
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop',
+    rank: 10,
+  },
+];
+
 export const sampleTVShows = [
   {
     id: '19',
