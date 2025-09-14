@@ -1,25 +1,59 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { app } from '../lib/firebase';
 
 interface Top10Item {
   id: string;
   title: string;
-  image: string;
+  image?: string;
   rank: number;
+  genre?: string;
+  year?: number;
+  duration?: string;
+  rating?: string;
 }
 
 interface Top10RowProps {
   title: string;
-  items: Top10Item[];
 }
 
-export default function Top10Row({ title, items }: Top10RowProps) {
+export default function Top10Row({ title }: Top10RowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [items, setItems] = useState<Top10Item[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const fetchTop10Movies = async () => {
+      try {
+        const db = getFirestore(app);
+        const moviesCollection = collection(db, 'movies');
+        const moviesSnapshot = await getDocs(moviesCollection);
+        
+        // Get the first 10 movies and assign ranks
+        const moviesData = moviesSnapshot.docs.slice(0, 10).map((doc, index) => ({
+          id: doc.id,
+          ...doc.data(),
+          rank: index + 1
+        })) as Top10Item[];
+        
+        setItems(moviesData);
+      } catch (err) {
+        console.error('Error fetching top 10 movies:', err);
+        setError('Failed to fetch movies');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTop10Movies();
+  }, []);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -68,6 +102,9 @@ export default function Top10Row({ title, items }: Top10RowProps) {
     setHoveredItem(null);
   };
 
+  if (loading) return <div className="px-4 md:px-8 py-8"><div className="text-white">Loading {title}...</div></div>;
+  if (error) return <div className="px-4 md:px-8 py-8"><div className="text-red-500">Error: {error}</div></div>;
+
   return (
     <div className="px-4 md:px-8 py-8">
       <h2 className="text-xl md:text-2xl font-semibold text-white mb-4">{title}</h2>
@@ -105,7 +142,7 @@ export default function Top10Row({ title, items }: Top10RowProps) {
               </div>
 
               <img
-                src={item.image}
+                src={item.image || '/placeholder.jpg'}
                 alt={item.title}
                 className="w-full h-full object-cover relative z-10 rounded-md"
               />
@@ -128,16 +165,16 @@ export default function Top10Row({ title, items }: Top10RowProps) {
                       <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                       <div className="space-y-2 text-gray-300">
                         <p className="text-sm">
-                          <span className="font-semibold">Genre:</span> {item.rank % 2 === 0 ? 'Action/Adventure' : 'Drama/Thriller'}
+                          <span className="font-semibold">Genre:</span> {item.genre || (item.rank % 2 === 0 ? 'Action/Adventure' : 'Drama/Thriller')}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Rating:</span> {Math.floor(Math.random() * 2) + 8}.{Math.floor(Math.random() * 9) + 1}/10
+                          <span className="font-semibold">Rating:</span> {item.rating || `${Math.floor(Math.random() * 2) + 8}.${Math.floor(Math.random() * 9) + 1}/10`}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Duration:</span> {Math.floor(Math.random() * 60) + 90} min
+                          <span className="font-semibold">Duration:</span> {item.duration || `${Math.floor(Math.random() * 60) + 90} min`}
                         </p>
                         <p className="text-sm">
-                          <span className="font-semibold">Year:</span> 2024
+                          <span className="font-semibold">Year:</span> {item.year || 2024}
                         </p>
                       </div>
                     </div>
