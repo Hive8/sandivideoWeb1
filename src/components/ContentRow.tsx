@@ -16,6 +16,7 @@ export default function ContentRow({ title, items }: ContentRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -39,12 +40,29 @@ export default function ContentRow({ title, items }: ContentRowProps) {
     const tileElement = event.currentTarget as HTMLElement;
     const tileRect = tileElement.getBoundingClientRect();
     
-    // Position relative to viewport (fixed positioning)
-    setHoverPosition({
-      x: tileRect.left + tileRect.width / 2,
-      y: tileRect.top + tileRect.height / 2,
-    });
-    setHoveredItem(itemId);
+    // Clear any existing timeout
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    
+    // Set timeout for delayed hover effect
+    hoverTimeoutRef.current = setTimeout(() => {
+      // Position relative to viewport (fixed positioning)
+      setHoverPosition({
+        x: tileRect.left + tileRect.width / 2,
+        y: tileRect.top + tileRect.height / 2,
+      });
+      setHoveredItem(itemId);
+    }, 1000);
+  };
+
+  const handleMouseLeave = () => {
+    // Clear the timeout to prevent delayed hover
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setHoveredItem(null);
   };
 
   return (
@@ -60,7 +78,7 @@ export default function ContentRow({ title, items }: ContentRowProps) {
               key={item.id}
               className="flex-shrink-0 w-[144px] h-[216px] bg-gray-800 rounded-md cursor-pointer transition-all duration-300 relative"
               onMouseEnter={(e) => handleMouseEnter(item.id, e)}
-              onMouseLeave={() => setHoveredItem(null)}
+              onMouseLeave={handleMouseLeave}
             >
               <img
                 src={item.image}
