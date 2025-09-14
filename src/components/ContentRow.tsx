@@ -1,4 +1,7 @@
+'use client';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRef } from 'react';
 
 interface ContentRowProps {
   title: string;
@@ -10,11 +13,34 @@ interface ContentRowProps {
 }
 
 export default function ContentRow({ title, items }: ContentRowProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: -300,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: 300,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="px-4 md:px-8 py-8">
       <h2 className="text-xl md:text-2xl font-semibold text-white mb-4">{title}</h2>
       <div className="relative group">
-        <div className="flex space-x-4 overflow-x-scroll scrollbar-hide pb-4">
+        <div
+          ref={scrollRef}
+          className="flex space-x-4 overflow-x-scroll scrollbar-hide pb-4"
+        >
           {items.map((item) => (
             <div
               key={item.id}
@@ -32,10 +58,16 @@ export default function ContentRow({ title, items }: ContentRowProps) {
           ))}
         </div>
         {/* Scroll buttons */}
-        <button className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          onClick={scrollLeft}
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+        >
           <ChevronLeft size={24} />
         </button>
-        <button className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          onClick={scrollRight}
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10"
+        >
           <ChevronRight size={24} />
         </button>
       </div>

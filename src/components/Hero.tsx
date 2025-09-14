@@ -1,23 +1,11 @@
 'use client';
 
 import { Play, Info } from 'lucide-react';
-import { useEffect } from 'react';
-
-// Import MUX player for web component usage
-if (typeof window !== 'undefined') {
-  import('@mux/mux-player');
-}
 
 export default function Hero() {
-  useEffect(() => {
-    // Ensure MUX player is loaded
-    if (typeof window !== 'undefined' && !customElements.get('mux-player')) {
-      import('@mux/mux-player');
-    }
-  }, []);
 
   return (
-    <section className="relative h-screen flex items-center overflow-hidden">
+    <section className="relative h-[75vh] flex items-center overflow-hidden">
       {/* Background Video with MUX Player */}
       <div className="absolute inset-0 z-0">
         {/* Using HTML5 video for demo - replace with MUX player below */}
