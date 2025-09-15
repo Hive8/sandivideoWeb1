@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
+import MuxPlayer from '@mux/mux-player-react';
 import { app } from '../lib/firebase';
 
 interface Movie {
@@ -14,6 +15,7 @@ interface Movie {
   year?: number;
   duration?: string;
   rating?: string;
+  video_path?: string;
 }
 
 interface ContentRowProps {
@@ -30,6 +32,15 @@ export default function ContentRow({ title }: ContentRowProps) {
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
 
+  // Extract playback ID from MUX URL
+  const extractPlaybackId = (videoPath: string): string => {
+    if (videoPath.includes('stream.mux.com/')) {
+      const match = videoPath.match(/stream\.mux\.com\/([^.?]+)/);
+      return match ? match[1] : videoPath;
+    }
+    return videoPath;
+  };
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -37,12 +48,19 @@ export default function ContentRow({ title }: ContentRowProps) {
         const moviesCollection = collection(db, 'movies');
         const moviesSnapshot = await getDocs(moviesCollection);
         
-        const moviesData = moviesSnapshot.docs.map(doc => ({
+        const allMovies = moviesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         })) as Movie[];
         
-        setMovies(moviesData);
+        console.log(`ContentRow "${title}": Showing all ${allMovies.length} movies`);
+        
+        // Show all movies for every carousel
+        const filteredMovies = allMovies;
+        
+        console.log(`ContentRow "${title}": Filtered to ${filteredMovies.length} movies`);
+        
+        setMovies(filteredMovies);
       } catch (err) {
         console.error('Error fetching movies:', err);
         setError('Failed to fetch movies');
@@ -52,7 +70,7 @@ export default function ContentRow({ title }: ContentRowProps) {
     };
 
     fetchMovies();
-  }, []);
+  }, [title]);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -98,7 +116,11 @@ export default function ContentRow({ title }: ContentRowProps) {
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
     }
-    setHoveredItem(null);
+    
+    // Add delay before hiding the hover box
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredItem(null);
+    }, 500);
   };
 
   if (loading) return <div className="px-4 md:px-8 py-8"><div className="text-white">Loading {title}...</div></div>;
@@ -137,32 +159,71 @@ export default function ContentRow({ title }: ContentRowProps) {
                     transform: 'translate(-50%, -50%)',
                   }}
                 >
-                  <div className="p-6 h-full flex flex-col">
+                  {/* MUX Player Section - Top Half */}
+                  <div className="w-full h-[169px] rounded-t-md overflow-hidden">
+                    {movie.video_path ? (
+                      <MuxPlayer
+                        playbackId={extractPlaybackId(movie.video_path)}
+                        metadata={{
+                          video_id: movie.id,
+                          video_title: movie.title,
+                        }}
+                        streamType="on-demand"
+                        autoPlay="muted"
+                        muted
+                        className="w-full h-full"
+                        style={{ objectFit: 'cover' }}
+                        onLoadStart={(e) => {
+                          const player = e.target as any;
+                          if (player && player.shadowRoot) {
+                            // Disable controls in shadow DOM
+                            const video = player.shadowRoot.querySelector('video');
+                            if (video) {
+                              video.controls = false;
+                            }
+                            // Hide control elements
+                            const controls = player.shadowRoot.querySelectorAll('mux-controls, .mux-controls, [part*="control"]');
+                            controls.forEach((control: any) => {
+                              control.style.display = 'none';
+                              control.style.visibility = 'hidden';
+                            });
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <div className="text-gray-400 text-sm">No preview</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Movie Info Section - Bottom Half */}
+                  <div className="p-4 h-[131px] flex flex-col">
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-white mb-3">{movie.title}</h3>
-                      <div className="space-y-2 text-gray-300">
-                        <p className="text-sm">
+                      <h3 className="text-lg font-bold text-white mb-2">{movie.title}</h3>
+                      <div className="space-y-1 text-gray-300 text-xs">
+                        <p>
                           <span className="font-semibold">Genre:</span> {movie.genre || ['Action', 'Drama', 'Comedy', 'Thriller', 'Romance'][Math.floor(Math.random() * 5)]}
                         </p>
-                        <p className="text-sm">
+                        <p>
                           <span className="font-semibold">Rating:</span> {movie.rating || `${Math.floor(Math.random() * 2) + 7}.${Math.floor(Math.random() * 9) + 1}/10`}
                         </p>
-                        <p className="text-sm">
+                        <p>
                           <span className="font-semibold">Duration:</span> {movie.duration || `${Math.floor(Math.random() * 60) + 90} min`}
                         </p>
-                        <p className="text-sm">
+                        <p>
                           <span className="font-semibold">Year:</span> {movie.year || 2024}
                         </p>
                       </div>
                     </div>
-                    <div className="flex space-x-3 mt-4">
+                    <div className="flex space-x-2 mt-2">
                       <button
                         onClick={() => router.push(`/play/${movie.id}`)}
-                        className="flex-1 bg-accent-orange hover:bg-accent-orange-dark text-white py-2 px-4 rounded-md font-semibold text-sm transition-colors"
+                        className="flex-1 bg-accent-orange hover:bg-accent-orange-dark text-white py-1.5 px-3 rounded text-xs font-semibold transition-colors"
                       >
                         Play
                       </button>
-                      <button className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-md font-semibold text-sm transition-colors">
+                      <button className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-1.5 px-3 rounded text-xs font-semibold transition-colors">
                         More Info
                       </button>
                     </div>

@@ -40,3 +40,49 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
+
+/* Hide MUX player controls for hover previews */
+.mux-player-no-controls {
+  position: relative;
+}
+
+.mux-player-no-controls::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.mux-player-no-controls * {
+  pointer-events: none !important;
+}
+
+.mux-player-no-controls mux-player *,
+.mux-player-no-controls mux-controls,
+.mux-player-no-controls .mux-controls,
+.mux-player-no-controls [class*="control"],
+.mux-player-no-controls [class*="Control"],
+.mux-player-no-controls video::-webkit-media-controls,
+.mux-player-no-controls video::-webkit-media-controls-panel {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.mux-player-no-controls:hover mux-player *,
+.mux-player-no-controls:hover mux-controls,
+.mux-player-no-controls:hover .mux-controls,
+.mux-player-no-controls:hover [class*="control"],
+.mux-player-no-controls:hover [class*="Control"],
+.mux-player-no-controls:hover video::-webkit-media-controls,
+.mux-player-no-controls:hover video::-webkit-media-controls-panel {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
