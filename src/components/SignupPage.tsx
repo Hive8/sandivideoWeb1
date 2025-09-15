@@ -45,10 +45,10 @@ const SignupPage = () => {
       });
 
       // Create user document in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        name: name,
+      await setDoc(doc(db, 'user', user.uid), {
+        display_name: name,
         email: email,
-        joinDate: new Date().toISOString(),
+        created_time: new Date().toISOString(),
         membershipType: 'Basic',
         watchlistCount: 0,
         totalWatchTime: '0h',

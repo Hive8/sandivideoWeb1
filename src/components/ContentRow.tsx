@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
 import { app } from '../lib/firebase';
 
 interface Movie {
@@ -27,6 +28,7 @@ export default function ContentRow({ title }: ContentRowProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -154,7 +156,10 @@ export default function ContentRow({ title }: ContentRowProps) {
                       </div>
                     </div>
                     <div className="flex space-x-3 mt-4">
-                      <button className="flex-1 bg-accent-orange hover:bg-accent-orange-dark text-white py-2 px-4 rounded-md font-semibold text-sm transition-colors">
+                      <button
+                        onClick={() => router.push(`/play/${movie.id}`)}
+                        className="flex-1 bg-accent-orange hover:bg-accent-orange-dark text-white py-2 px-4 rounded-md font-semibold text-sm transition-colors"
+                      >
                         Play
                       </button>
                       <button className="flex-1 bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-md font-semibold text-sm transition-colors">
