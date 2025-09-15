@@ -172,7 +172,7 @@ export default function ContentRow({ title }: ContentRowProps) {
                         autoPlay="muted"
                         muted
                         nohotkeys
-                        className="w-full h-full"
+                        className="w-full h-full mux-player-no-cc"
                         style={{ objectFit: 'cover' }}
                         onLoadStart={(e) => {
                           const player = e.target as any;

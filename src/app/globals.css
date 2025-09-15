@@ -93,3 +93,19 @@ body {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Hide CC (Closed Captions) button for hover previews */
+.mux-player-no-cc mux-captions-button,
+.mux-player-no-cc .mux-captions-button,
+.mux-player-no-cc [class*="caption"],
+.mux-player-no-cc [class*="Caption"],
+.mux-player-no-cc [class*="cc"],
+.mux-player-no-cc [class*="CC"],
+.mux-player-no-cc button[aria-label*="caption"],
+.mux-player-no-cc button[aria-label*="Caption"],
+.mux-player-no-cc button[aria-label*="subtitle"],
+.mux-player-no-cc button[aria-label*="Subtitle"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
