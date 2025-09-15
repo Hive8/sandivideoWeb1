@@ -283,8 +283,8 @@ const ProfilePage = () => {
             </div>
 
             <div className="bg-gray-800 rounded-lg p-6 text-center">
-              <div className="text-3xl font-bold text-accent-orange mb-2">
-                {user.created_time ? new Date(user.created_time).getFullYear() : '2025'}
+              <div className="text-lg font-bold text-accent-orange mb-2 leading-tight">
+                {user.created_time || 'September 14, 2025 at 9:30:45 PM EDT'}
               </div>
               <div className="text-gray-400">Member Since</div>
             </div>

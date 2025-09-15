@@ -48,7 +48,16 @@ const SignupPage = () => {
       await setDoc(doc(db, 'user', user.uid), {
         display_name: name,
         email: email,
-        created_time: new Date().toISOString(),
+        created_time: new Date().toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZoneName: 'short'
+        }),
         membershipType: 'Basic',
         watchlistCount: 0,
         totalWatchTime: '0h',
@@ -161,6 +170,26 @@ const SignupPage = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+            </div>
+          </div>
+
+          {/* Account Creation Time Display */}
+          <div className="bg-gray-800/50 border border-gray-600 rounded-md p-4">
+            <div className="text-sm text-gray-300 mb-2">Account will be created on:</div>
+            <div className="text-lg font-semibold text-accent-orange">
+              {new Date().toLocaleString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZoneName: 'short'
+              })}
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              ISO Format: {new Date().toISOString()}
             </div>
           </div>
 

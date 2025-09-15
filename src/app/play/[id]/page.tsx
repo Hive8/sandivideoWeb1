@@ -167,7 +167,7 @@ const PlayVideoPage = () => {
                 <span className="text-green-400 font-semibold">
                   {Math.round(movie.vote_average * 10)}% Match
                 </span>
-                <span>{new Date(movie.release_date).getFullYear()}</span>
+                <span>{movie.release_date ? new Date(movie.release_date).getFullYear() : '2025'}</span>
                 <span className="border border-gray-400 px-2 py-1 text-sm">HD</span>
               </div>
               <p className="text-lg text-gray-300 max-w-none">{movie.description}</p>
