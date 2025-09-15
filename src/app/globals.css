@@ -44,7 +44,12 @@ body {
 /* Hide MUX player controls for hover previews */
 .mux-player-no-controls {
   position: relative;
+  display: none;
 }
+
+  mux-player::part(media-chrome-controls) {
+    display: none;
+  }
 
 .mux-player-no-controls::after {
   content: '';
@@ -55,10 +60,12 @@ body {
   bottom: 0;
   pointer-events: none;
   z-index: 10;
+  display: none;
 }
 
 .mux-player-no-controls * {
   pointer-events: none !important;
+  display: none;
 }
 
 .mux-player-no-controls mux-player *,

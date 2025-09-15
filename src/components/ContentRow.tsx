@@ -171,6 +171,7 @@ export default function ContentRow({ title }: ContentRowProps) {
                         streamType="on-demand"
                         autoPlay="muted"
                         muted
+                        nohotkeys
                         className="w-full h-full"
                         style={{ objectFit: 'cover' }}
                         onLoadStart={(e) => {
