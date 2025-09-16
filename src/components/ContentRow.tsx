@@ -175,7 +175,7 @@ export default function ContentRow({ title }: ContentRowProps) {
                         className="w-full h-full mux-player-no-cc"
                         style={{ objectFit: 'cover' }}
                         onLoadStart={(e) => {
-                          const player = e.target as any;
+                          const player = e.target as HTMLElement;
                           if (player && player.shadowRoot) {
                             // Disable controls in shadow DOM
                             const video = player.shadowRoot.querySelector('video');
@@ -184,9 +184,9 @@ export default function ContentRow({ title }: ContentRowProps) {
                             }
                             // Hide control elements
                             const controls = player.shadowRoot.querySelectorAll('mux-controls, .mux-controls, [part*="control"]');
-                            controls.forEach((control: any) => {
-                              control.style.display = 'none';
-                              control.style.visibility = 'hidden';
+                            controls.forEach((control: Element) => {
+                              (control as HTMLElement).style.display = 'none';
+                              (control as HTMLElement).style.visibility = 'hidden';
                             });
                           }
                         }}
