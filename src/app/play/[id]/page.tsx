@@ -95,24 +95,24 @@ const PlayVideoPage = () => {
       <style dangerouslySetInnerHTML={{
         __html: `
           .mux-player-container mux-player {
-            --accent-color: #ff6b35;
+            --accent-color: #f3c033;
             --media-control-background: rgba(0, 0, 0, 0.7);
             --media-control-hover-background: rgba(0, 0, 0, 0.9);
             --media-control-bar-color: rgba(255, 255, 255, 0.7);
-            --media-control-bar-hover-color: #ff6b35;
-            --media-control-bar-active-color: #ff6b35;
-            --media-control-bar-fill-color: #ff6b35;
-            --media-control-bar-fill-hover-color: #ff8534;
-            --media-control-bar-fill-active-color: #ff8534;
+            --media-control-bar-hover-color: #f3c033;
+            --media-control-bar-active-color: #f3c033;
+            --media-control-bar-fill-color: #f3c033;
+            --media-control-bar-fill-hover-color: #f4c842;
+            --media-control-bar-fill-active-color: #f4c842;
             --media-control-button-color: rgba(255, 255, 255, 0.8);
-            --media-control-button-hover-color: #ff6b35;
-            --media-control-button-active-color: #ff6b35;
+            --media-control-button-hover-color: #f3c033;
+            --media-control-button-active-color: #f3c033;
             --media-control-time-color: rgba(255, 255, 255, 0.8);
-            --media-control-time-hover-color: #ff6b35;
+            --media-control-time-hover-color: #f3c033;
             --media-control-volume-color: rgba(255, 255, 255, 0.8);
-            --media-control-volume-hover-color: #ff6b35;
-            --media-control-volume-fill-color: #ff6b35;
-            --media-control-volume-fill-hover-color: #ff8534;
+            --media-control-volume-hover-color: #f3c033;
+            --media-control-volume-fill-color: #f3c033;
+            --media-control-volume-fill-hover-color: #f4c842;
           }
         `
       }} />
