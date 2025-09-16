@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Sandi Video",
-  description: "A Netflix clone built with Next.js",
+  description: "A Streaming and VOD Platform",
 };
 
 export default function RootLayout({
