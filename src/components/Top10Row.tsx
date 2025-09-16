@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import Image from 'next/image';
 import { app } from '../lib/firebase';
 
 interface Top10Item {
@@ -141,9 +142,11 @@ export default function Top10Row({ title }: Top10RowProps) {
                 </div>
               </div>
 
-              <img
+              <Image
                 src={item.image || '/placeholder.jpg'}
                 alt={item.title}
+                width={144}
+                height={216}
                 className="w-full h-full object-cover relative z-10 rounded-md"
               />
 

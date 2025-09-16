@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import MuxPlayer from '@mux/mux-player-react';
 import { app } from '../lib/firebase';
 
@@ -141,9 +142,11 @@ export default function ContentRow({ title }: ContentRowProps) {
               onMouseEnter={(e) => handleMouseEnter(movie.id, e)}
               onMouseLeave={handleMouseLeave}
             >
-              <img
+              <Image
                 src={movie.image || '/placeholder.jpg'}
                 alt={movie.title}
+                width={144}
+                height={216}
                 className="w-full h-full object-cover rounded-md"
               />
 

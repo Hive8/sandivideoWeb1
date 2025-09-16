@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { app } from '../lib/firebase';
 
 interface User {
@@ -182,9 +183,11 @@ const ProfilePage = () => {
             <div className="flex-shrink-0">
               <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                 {user.avatar ? (
-                  <img
+                  <Image
                     src={user.avatar}
                     alt={user.display_name}
+                    width={160}
+                    height={160}
                     className="w-full h-full object-cover"
                   />
                 ) : (

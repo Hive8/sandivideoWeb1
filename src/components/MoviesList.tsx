@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import Image from 'next/image';
 import { app } from '../lib/firebase';
 
 interface Movie {
@@ -55,9 +56,11 @@ const MoviesList = () => {
         {movies.map(movie => (
           <div key={movie.id} className="bg-gray-800 rounded-lg p-4 text-white">
             {movie.image && (
-              <img
+              <Image
                 src={movie.image}
                 alt={movie.title}
+                width={400}
+                height={192}
                 className="w-full h-48 object-cover rounded-md mb-3"
               />
             )}
