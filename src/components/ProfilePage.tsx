@@ -6,6 +6,9 @@ import { getAuth, onAuthStateChanged, signOut, User as FirebaseUser } from 'fire
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { app } from '../lib/firebase';
+import { processImageUrl } from '../lib/imageUtils';
+
+import { Timestamp } from 'firebase/firestore';
 
 interface User {
   id: string;
@@ -13,13 +16,30 @@ interface User {
   email: string;
   avatar?: string;
   bio?: string;
-  created_time?: string;
+  created_time?: Timestamp;
   favoriteGenres?: string[];
   watchlistCount?: number;
   totalWatchTime?: string;
   membershipType?: string;
   // Add other fields as needed
 }
+
+// Utility function to format Firebase Timestamp
+const formatTimestamp = (timestamp: Timestamp | undefined): string => {
+  if (!timestamp) return 'September 14, 2025 at 9:30:45 PM EDT';
+
+  // Convert Firebase Timestamp to Date
+  const date = timestamp.toDate();
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short'
+  });
+};
 
 const ProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -184,7 +204,7 @@ const ProfilePage = () => {
               <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                 {user.avatar ? (
                   <Image
-                    src={user.avatar}
+                    src={processImageUrl(user.avatar)}
                     alt={user.display_name}
                     width={160}
                     height={160}
@@ -287,7 +307,7 @@ const ProfilePage = () => {
 
             <div className="bg-gray-800 rounded-lg p-6 text-center">
               <div className="text-lg font-bold text-accent-orange mb-2 leading-tight">
-                {user.created_time || 'September 14, 2025 at 9:30:45 PM EDT'}
+                {formatTimestamp(user.created_time)}
               </div>
               <div className="text-gray-400">Member Since</div>
             </div>
