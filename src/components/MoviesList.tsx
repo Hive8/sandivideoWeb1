@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import Image from 'next/image';
 import { app } from '../lib/firebase';
+import { processImageUrl } from '../lib/imageUtils';
 
 interface Movie {
   id: string;
@@ -57,7 +58,7 @@ const MoviesList = () => {
           <div key={movie.id} className="bg-gray-800 rounded-lg p-4 text-white">
             {movie.image && (
               <Image
-                src={movie.image}
+                src={processImageUrl(movie.image)}
                 alt={movie.title}
                 width={400}
                 height={192}

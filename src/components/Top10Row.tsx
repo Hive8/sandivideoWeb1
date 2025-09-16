@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import Image from 'next/image';
 import { app } from '../lib/firebase';
+import { processImageUrl } from '../lib/imageUtils';
 
 interface Top10Item {
   id: string;
@@ -143,7 +144,7 @@ export default function Top10Row({ title }: Top10RowProps) {
               </div>
 
               <Image
-                src={item.image || '/placeholder.jpg'}
+                src={processImageUrl(item.image || '/placeholder.jpg')}
                 alt={item.title}
                 width={144}
                 height={216}

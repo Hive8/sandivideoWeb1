@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MuxPlayer from '@mux/mux-player-react';
 import { app } from '../lib/firebase';
+import { processImageUrl } from '../lib/imageUtils';
 
 interface Movie {
   id: string;
@@ -143,7 +144,7 @@ export default function ContentRow({ title }: ContentRowProps) {
               onMouseLeave={handleMouseLeave}
             >
               <Image
-                src={movie.image || '/placeholder.jpg'}
+                src={processImageUrl(movie.image || '/placeholder.jpg')}
                 alt={movie.title}
                 width={144}
                 height={216}
